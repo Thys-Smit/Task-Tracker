@@ -7,11 +7,14 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Data.SqlClient;
 
 namespace Task_Tracker
 {
     public partial class Form1 : Form
     {
+        DBOperations db = new DBOperations();
+
         public Form1()
         {
             InitializeComponent();
@@ -27,7 +30,17 @@ namespace Task_Tracker
 
         public void UpdateGridView()
         {
+           // this.taskTrackerDataSet.Clear();
+           // DataSet ds = db.getTaskDataSet();
 
+           // this.dataGridView1.DataSource = null;
+           // //dataGridView1.DataSource = ds;
+           //// dataGridView1.Update();
+           // //dataGridView1.Refresh();
+           // //IDataAdapter da;
+           // //da.Fill(taskTrackerDataSet);
+            
+           // this.Refresh();
         }
     }
 }

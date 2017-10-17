@@ -399,7 +399,7 @@ namespace Task_Tracker {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public TaskRow AddTaskRow(int IDTask, string Application, System.TimeSpan CurrentSessionStart, System.TimeSpan CurrentSessionEnd, System.TimeSpan TotalTime) {
+            public TaskRow AddTaskRow(int IDTask, string Application, System.DateTime CurrentSessionStart, System.DateTime CurrentSessionEnd, long TotalTime) {
                 TaskRow rowTaskRow = ((TaskRow)(this.NewRow()));
                 object[] columnValuesArray = new object[] {
                         IDTask,
@@ -450,11 +450,11 @@ namespace Task_Tracker {
                 base.Columns.Add(this.columnIDTask);
                 this.columnApplication = new global::System.Data.DataColumn("Application", typeof(string), null, global::System.Data.MappingType.Element);
                 base.Columns.Add(this.columnApplication);
-                this.columnCurrentSessionStart = new global::System.Data.DataColumn("CurrentSessionStart", typeof(global::System.TimeSpan), null, global::System.Data.MappingType.Element);
+                this.columnCurrentSessionStart = new global::System.Data.DataColumn("CurrentSessionStart", typeof(global::System.DateTime), null, global::System.Data.MappingType.Element);
                 base.Columns.Add(this.columnCurrentSessionStart);
-                this.columnCurrentSessionEnd = new global::System.Data.DataColumn("CurrentSessionEnd", typeof(global::System.TimeSpan), null, global::System.Data.MappingType.Element);
+                this.columnCurrentSessionEnd = new global::System.Data.DataColumn("CurrentSessionEnd", typeof(global::System.DateTime), null, global::System.Data.MappingType.Element);
                 base.Columns.Add(this.columnCurrentSessionEnd);
-                this.columnTotalTime = new global::System.Data.DataColumn("TotalTime", typeof(global::System.TimeSpan), null, global::System.Data.MappingType.Element);
+                this.columnTotalTime = new global::System.Data.DataColumn("TotalTime", typeof(long), null, global::System.Data.MappingType.Element);
                 base.Columns.Add(this.columnTotalTime);
                 this.Constraints.Add(new global::System.Data.UniqueConstraint("Constraint1", new global::System.Data.DataColumn[] {
                                 this.columnIDTask}, true));
@@ -626,10 +626,10 @@ namespace Task_Tracker {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public System.TimeSpan CurrentSessionStart {
+            public System.DateTime CurrentSessionStart {
                 get {
                     try {
-                        return ((global::System.TimeSpan)(this[this.tableTask.CurrentSessionStartColumn]));
+                        return ((global::System.DateTime)(this[this.tableTask.CurrentSessionStartColumn]));
                     }
                     catch (global::System.InvalidCastException e) {
                         throw new global::System.Data.StrongTypingException("The value for column \'CurrentSessionStart\' in table \'Task\' is DBNull.", e);
@@ -642,10 +642,10 @@ namespace Task_Tracker {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public System.TimeSpan CurrentSessionEnd {
+            public System.DateTime CurrentSessionEnd {
                 get {
                     try {
-                        return ((global::System.TimeSpan)(this[this.tableTask.CurrentSessionEndColumn]));
+                        return ((global::System.DateTime)(this[this.tableTask.CurrentSessionEndColumn]));
                     }
                     catch (global::System.InvalidCastException e) {
                         throw new global::System.Data.StrongTypingException("The value for column \'CurrentSessionEnd\' in table \'Task\' is DBNull.", e);
@@ -658,10 +658,10 @@ namespace Task_Tracker {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public System.TimeSpan TotalTime {
+            public long TotalTime {
                 get {
                     try {
-                        return ((global::System.TimeSpan)(this[this.tableTask.TotalTimeColumn]));
+                        return ((long)(this[this.tableTask.TotalTimeColumn]));
                     }
                     catch (global::System.InvalidCastException e) {
                         throw new global::System.Data.StrongTypingException("The value for column \'TotalTime\' in table \'Task\' is DBNull.", e);

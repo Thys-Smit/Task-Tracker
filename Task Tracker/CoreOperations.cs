@@ -40,12 +40,16 @@ namespace Task_Tracker
             string strTitle = GetActiveWindowTitle();
             string strApplication;
 
+            //Open the DB Connection
             if (!db.connectToDB(connString))
             {
                 stopTimer();
             }
             else
             {
+
+                //TODO :Impliment advanced regex filtering to determine the application name correctly. The current string manipulation caters for a specific scenario.
+                //The idea will be to enable the users to manualy link a regex pattern to a application to enable the program to extract the application name from the window caption.
                 try
                 {
                     var splitTitle = strTitle.Split('-');
@@ -56,6 +60,11 @@ namespace Task_Tracker
                     strApplication = strTitle;
                 }
 
+                //This is the logic to determine the following:
+                //Is it a brand new task - Then insert a new task into the Task table.
+                //Is it a new session of a existing task - Then update the start time and end time.
+                //Is it the same task as in the previous interval - Then only update the endtime of this task.
+                //Note : When a new task is active (be it a brand new task or a new session of a existing task) the previous task' total time should be updated. 
                 if (strPreviousTitle != strTitle)
                 { 
                     if (db.isValidApplication(strApplication) && !db.isTaskMatch(strTitle))
@@ -79,8 +88,14 @@ namespace Task_Tracker
                     db.updateExistingTask_EndTime(strTitle, DateTime.Now);
                     strPreviousTitle = strTitle;
                 }
-            
+
+                //Close the DB Connection and restart the timer.
+
+                db.closeDBConn();
                 startTimer();
+                
+                //mainForm.UpdateGridView();
+               
             }
 
         }

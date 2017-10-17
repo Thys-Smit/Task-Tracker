@@ -84,7 +84,7 @@ SELECT IDTask, Application, CurrentSessionStart, CurrentSessionEnd, TotalTime FR
   <xs:element name="TaskTrackerDataSet" msdata:IsDataSet="true" msdata:UseCurrentLocale="true" msprop:EnableTableAdapterManager="True" msprop:Generator_DataSetName="TaskTrackerDataSet" msprop:Generator_UserDSName="TaskTrackerDataSet">
     <xs:complexType>
       <xs:choice minOccurs="0" maxOccurs="unbounded">
-        <xs:element name="Task" msprop:Generator_TableClassName="TaskDataTable" msprop:Generator_TableVarName="tableTask" msprop:Generator_TablePropName="Task" msprop:Generator_RowDeletingName="TaskRowDeleting" msprop:Generator_RowChangingName="TaskRowChanging" msprop:Generator_RowEvHandlerName="TaskRowChangeEventHandler" msprop:Generator_RowDeletedName="TaskRowDeleted" msprop:Generator_UserTableName="Task" msprop:Generator_RowChangedName="TaskRowChanged" msprop:Generator_RowEvArgName="TaskRowChangeEvent" msprop:Generator_RowClassName="TaskRow">
+        <xs:element name="Task" msprop:Generator_TableClassName="TaskDataTable" msprop:Generator_TableVarName="tableTask" msprop:Generator_RowChangedName="TaskRowChanged" msprop:Generator_TablePropName="Task" msprop:Generator_RowDeletingName="TaskRowDeleting" msprop:Generator_RowChangingName="TaskRowChanging" msprop:Generator_RowEvHandlerName="TaskRowChangeEventHandler" msprop:Generator_RowDeletedName="TaskRowDeleted" msprop:Generator_RowClassName="TaskRow" msprop:Generator_UserTableName="Task" msprop:Generator_RowEvArgName="TaskRowChangeEvent">
           <xs:complexType>
             <xs:sequence>
               <xs:element name="IDTask" msprop:Generator_ColumnVarNameInTable="columnIDTask" msprop:Generator_ColumnPropNameInRow="IDTask" msprop:Generator_ColumnPropNameInTable="IDTaskColumn" msprop:Generator_UserColumnName="IDTask" type="xs:int" />
@@ -95,9 +95,9 @@ SELECT IDTask, Application, CurrentSessionStart, CurrentSessionEnd, TotalTime FR
                   </xs:restriction>
                 </xs:simpleType>
               </xs:element>
-              <xs:element name="CurrentSessionStart" msprop:Generator_ColumnVarNameInTable="columnCurrentSessionStart" msprop:Generator_ColumnPropNameInRow="CurrentSessionStart" msprop:Generator_ColumnPropNameInTable="CurrentSessionStartColumn" msprop:Generator_UserColumnName="CurrentSessionStart" type="xs:duration" minOccurs="0" />
-              <xs:element name="CurrentSessionEnd" msprop:Generator_ColumnVarNameInTable="columnCurrentSessionEnd" msprop:Generator_ColumnPropNameInRow="CurrentSessionEnd" msprop:Generator_ColumnPropNameInTable="CurrentSessionEndColumn" msprop:Generator_UserColumnName="CurrentSessionEnd" type="xs:duration" minOccurs="0" />
-              <xs:element name="TotalTime" msprop:Generator_ColumnVarNameInTable="columnTotalTime" msprop:Generator_ColumnPropNameInRow="TotalTime" msprop:Generator_ColumnPropNameInTable="TotalTimeColumn" msprop:Generator_UserColumnName="TotalTime" type="xs:duration" minOccurs="0" />
+              <xs:element name="CurrentSessionStart" msprop:Generator_ColumnVarNameInTable="columnCurrentSessionStart" msprop:Generator_ColumnPropNameInRow="CurrentSessionStart" msprop:Generator_ColumnPropNameInTable="CurrentSessionStartColumn" msprop:Generator_UserColumnName="CurrentSessionStart" type="xs:dateTime" minOccurs="0" />
+              <xs:element name="CurrentSessionEnd" msprop:Generator_ColumnVarNameInTable="columnCurrentSessionEnd" msprop:Generator_ColumnPropNameInRow="CurrentSessionEnd" msprop:Generator_ColumnPropNameInTable="CurrentSessionEndColumn" msprop:Generator_UserColumnName="CurrentSessionEnd" type="xs:dateTime" minOccurs="0" />
+              <xs:element name="TotalTime" msprop:Generator_ColumnVarNameInTable="columnTotalTime" msprop:Generator_ColumnPropNameInRow="TotalTime" msprop:Generator_ColumnPropNameInTable="TotalTimeColumn" msprop:Generator_UserColumnName="TotalTime" type="xs:long" minOccurs="0" />
             </xs:sequence>
           </xs:complexType>
         </xs:element>

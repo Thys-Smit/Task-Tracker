@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Data.SqlClient;
+using System.Data;
 using System.Windows.Forms;
 using System.Timers;
 using System.Diagnostics;
@@ -27,29 +28,38 @@ namespace Task_Tracker
             catch (SqlException ex)
             {
                 // output the error to see what's going on
-                MessageBox.Show("The connection to the database could not be made. \n\nCheck the connection before trying to continue.");
+                MessageBox.Show("The connection to the database could not be made. \n\nCheck the connection before trying to continue.\n\n" + ex.Message);
                 return false;
             }
         }
 
         public bool connectToDB(string connString)
         {
-            if(conn.State != System.Data.ConnectionState.Open) conn.ConnectionString = connString;
-            if(testDBConnection(connString))
+            if (conn.State != System.Data.ConnectionState.Open)
+            {
+                conn.ConnectionString = connString;
+            }
+            else return true;
+            
+            if (testDBConnection(connString))
             {
                 conn.Open();
                 return true;
             }
-            else
-            {
-                return false;
-            } 
+            else return false;
+            
+        }
+
+        public void closeDBConn()
+        {
+            conn.Close();
         }
 
         public void insertNewTask(string strTitle, DateTime currentStartTime)
         {
-            conn.Open();
-            //Insert Statement
+            //conn.Open();
+
+            //Insert SQL Command
             SqlCommand insertCommand = new SqlCommand
             (
                 "INSERT INTO Task (Application, CurrentSessionStart) VALUES (@strTitle, @currentStartTime)", conn
@@ -61,22 +71,28 @@ namespace Task_Tracker
             try
             {
                 insertCommand.ExecuteNonQuery();
-                conn.Close();
             }
             catch (SqlException ex)
             {
+                MessageBox.Show(ex.Message);
                 conn.Close();
                 return;
+            }
+            finally
+            {
+                //conn.Close();
             }
         }
 
         public bool isValidApplication(string strTitle)
         {
-            
+
+            //Select SQL Command 
             SqlCommand selectStatement = new SqlCommand
             (
                 "SELECT Count(IDApplication) FROM Applications WHERE ApplicationName LIKE @strTitle", conn
             );
+            //Add Params
             selectStatement.Parameters.Add(new SqlParameter("strTitle", "%" + strTitle));
 
             try
@@ -88,31 +104,38 @@ namespace Task_Tracker
                 
                 if (reader.GetInt32(0) > 0)
                 {
-                    conn.Close();
+                    reader.Close();
                     return true;
                 }
                 else
                 {
-                    conn.Close();
+                    reader.Close();
                     return false;
-                } 
-
+                }
+                
             }
             catch (SqlException ex)
             {
-                MessageBox.Show(ex.ToString());
+                MessageBox.Show(ex.Message);
                 conn.Close();
                 return false;
+            }
+            finally
+            {
+                //conn.Close();
             }
         }
 
         public bool isTaskMatch(string strTitle)
         {
-            conn.Open();
+            //conn.Open();
+
+            //Select SQL Command 
             SqlCommand selectStatement = new SqlCommand
             (
                 "SELECT Count(Application) FROM Task WHERE Application = @strTitle", conn
             );
+            //Add Params
             selectStatement.Parameters.Add(new SqlParameter("strTitle", strTitle));
 
             try
@@ -123,19 +146,19 @@ namespace Task_Tracker
 
                 if (reader.GetInt32(0) > 0)
                 {
-                    conn.Close();
+                    reader.Close();
                     return true;
                 }
                 else
                 {
-                    conn.Close();
+                    reader.Close();
                     return false;
                 }
 
             }
             catch (SqlException ex)
             {
-                MessageBox.Show(ex.ToString());
+                MessageBox.Show(ex.Message);
                 conn.Close();
                 return false;
             }
@@ -143,77 +166,86 @@ namespace Task_Tracker
 
         public void updateExistingTask_StartTime(string strTitle, DateTime currentStartTime)
         {
-            conn.Open();
+            //conn.Open();
+
+            //Update SQL Command
             SqlCommand updateCommand = new SqlCommand
             (
                 "UPDATE Task SET CurrentSessionStart = @currentStartTime WHERE Application = @strTitle", conn
             );
-
+            //Add Params
             updateCommand.Parameters.Add(new SqlParameter("strTitle", strTitle));
             updateCommand.Parameters.Add(new SqlParameter("currentStartTime", currentStartTime));
 
             try
             {
                 updateCommand.ExecuteNonQuery();
-                conn.Close();
             }
             catch(SqlException ex)
             {
-                MessageBox.Show(ex.ToString());
-                conn.Close();
+                MessageBox.Show(ex.Message);
             }
-            
+            finally
+            {
+                //conn.Close();
+            }
+
         }
 
         public void updateExistingTask_EndTime(string strTitle, DateTime currentEndTime)
         {
-            conn.Open();
+            //conn.Open();
             SqlCommand updateCommand = new SqlCommand
             (
                 "UPDATE Task SET CurrentSessionEnd = @currentEndTime WHERE Application = @strTitle", conn
             );
-
+            //Add Params
             updateCommand.Parameters.Add(new SqlParameter("strTitle", strTitle));
             updateCommand.Parameters.Add(new SqlParameter("currentEndTime", currentEndTime));
 
             try
             {
                 updateCommand.ExecuteNonQuery();
-                conn.Close();
             }
             catch (SqlException ex)
             {
-                MessageBox.Show(ex.ToString());
-                conn.Close();
+                MessageBox.Show(ex.Message);
+            }
+            finally
+            {
+                //conn.Close();
             }
            
         }
 
         public void updateExistingTask_TotalTime(string strTitle, DateTime totalTime)
         {
-            conn.Open();
+            //conn.Open();
 
             Int64 duration = getTimeSpan(strTitle);
             
+            //Update SQL Command
             SqlCommand updateCommand = new SqlCommand
             (             
                 "UPDATE Task SET TotalTime = @totalTime WHERE Application = @strTitle", conn
             );
-
+            //Add Params
             updateCommand.Parameters.Add(new SqlParameter("strTitle", strTitle));
             updateCommand.Parameters.Add(new SqlParameter("totalTime", duration));
 
             try
             {
                 updateCommand.ExecuteNonQuery();
-                conn.Close();
             }
             catch (SqlException ex)
             {
-                MessageBox.Show(ex.ToString());
-                conn.Close();
+                MessageBox.Show(ex.Message);
             }
-            
+            finally
+            {
+                //conn.Close();
+            }
+
         }
 
         private Int64 getTimeSpan(string strTitle)
@@ -221,22 +253,24 @@ namespace Task_Tracker
 
             DateTime currentStart;
             DateTime currentEnd;
-            Int64 totalTime;
+            Int64 totalTime = 0;
             Int64 duration;
 
+            //Select SQL command
             SqlCommand selectStatement = new SqlCommand
             (
                 "SELECT CurrentSessionStart, CurrentSessionEnd, TotalTime FROM Task WHERE Application = @strTitle", conn
             );
-
+            //Add Params
             selectStatement.Parameters.Add(new SqlParameter("strTitle", strTitle));
+
             try
             {
                 selectStatement.ExecuteNonQuery();
             }
             catch (SqlException ex)
             {
-                MessageBox.Show(ex.ToString());
+                MessageBox.Show(ex.Message);
                 conn.Close();
             }
 
@@ -261,17 +295,36 @@ namespace Task_Tracker
                 totalTime = totalTime + duration;
                 Debug.Print("After :" + TimeSpan.FromTicks(totalTime));
                 reader.Close();
-                return duration;
+                return totalTime;
             }
             else
             {
                 reader.Close();
-                MessageBox.Show("There was no results returned from the query");
+                MessageBox.Show("There was no results returned from the query, there might be a data error");
                 Int64 noValue = 0;
                 return noValue;
             }
    
         }
+
+        ////public DataSet getTaskDataSet()
+        //{
+        //    //connectToDB("Data Source=(localdb)\\MSSQLLocalDB;Initial Catalog = TaskTracker; Integrated Security = True");
+        //    conn.ConnectionString = "Data Source=(localdb)\\MSSQLLocalDB;Initial Catalog = TaskTracker; Integrated Security = True";
+        //    conn.Close();
+        //    conn.Open();
+        //    //SqlCommand selectStatement = new SqlCommand
+        //    //(
+        //    //    "Select * FROM Task", conn
+        //    //);
+        //    string query = "Select * FROM Task";
+
+        //    SqlDataAdapter da = new SqlDataAdapter(query, conn);
+        //    DataSet ds = new DataSet();
+        //    da.Fill(ds, "dbo.Task");
+        //    conn.Close();
+        //    return ds;
+        //}
 
     }
 }
