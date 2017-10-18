@@ -223,15 +223,17 @@ namespace Task_Tracker
             //conn.Open();
 
             Int64 duration = getTimeSpan(strTitle);
+            TimeSpan timeSpan = TimeSpan.FromTicks(duration);
             
             //Update SQL Command
             SqlCommand updateCommand = new SqlCommand
             (             
-                "UPDATE Task SET TotalTime = @totalTime WHERE Application = @strTitle", conn
+                "UPDATE Task SET TotalTime = @totalTime, TimeSpan = @timeSpan WHERE Application = @strTitle", conn
             );
             //Add Params
             updateCommand.Parameters.Add(new SqlParameter("strTitle", strTitle));
             updateCommand.Parameters.Add(new SqlParameter("totalTime", duration));
+            updateCommand.Parameters.Add(new SqlParameter("timeSpan", timeSpan));
 
             try
             {
@@ -304,28 +306,9 @@ namespace Task_Tracker
                 Int64 noValue = 0;
                 return noValue;
             }
-   
+
         }
 
-        ////public DataSet getTaskDataSet()
-        //{
-        //    //connectToDB("Data Source=(localdb)\\MSSQLLocalDB;Initial Catalog = TaskTracker; Integrated Security = True");
-        //    conn.ConnectionString = "Data Source=(localdb)\\MSSQLLocalDB;Initial Catalog = TaskTracker; Integrated Security = True";
-        //    conn.Close();
-        //    conn.Open();
-        //    //SqlCommand selectStatement = new SqlCommand
-        //    //(
-        //    //    "Select * FROM Task", conn
-        //    //);
-        //    string query = "Select * FROM Task";
-
-        //    SqlDataAdapter da = new SqlDataAdapter(query, conn);
-        //    DataSet ds = new DataSet();
-        //    da.Fill(ds, "dbo.Task");
-        //    conn.Close();
-        //    return ds;
-        //}
-
-    }
+}
 }
 

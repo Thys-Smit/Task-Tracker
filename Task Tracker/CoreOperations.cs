@@ -90,11 +90,8 @@ namespace Task_Tracker
                 }
 
                 //Close the DB Connection and restart the timer.
-
                 db.closeDBConn();
                 startTimer();
-                
-                //mainForm.UpdateGridView();
                
             }
 
@@ -121,7 +118,7 @@ namespace Task_Tracker
         {
             System.Timers.Timer aTimer = new System.Timers.Timer();
             aTimer.Elapsed += new ElapsedEventHandler(OnTimedEvent);
-            aTimer.Interval = 2000;
+            aTimer.Interval = 1000;
             aTimer.AutoReset = false;
             aTimer.Enabled = true;
         }

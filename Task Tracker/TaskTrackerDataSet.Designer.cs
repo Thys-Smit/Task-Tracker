@@ -289,6 +289,8 @@ namespace Task_Tracker {
             
             private global::System.Data.DataColumn columnTotalTime;
             
+            private global::System.Data.DataColumn columnTimeSpan;
+            
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
             public TaskDataTable() {
@@ -364,6 +366,14 @@ namespace Task_Tracker {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public global::System.Data.DataColumn TimeSpanColumn {
+                get {
+                    return this.columnTimeSpan;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
             [global::System.ComponentModel.Browsable(false)]
             public int Count {
                 get {
@@ -399,14 +409,15 @@ namespace Task_Tracker {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public TaskRow AddTaskRow(int IDTask, string Application, System.DateTime CurrentSessionStart, System.DateTime CurrentSessionEnd, long TotalTime) {
+            public TaskRow AddTaskRow(int IDTask, string Application, System.DateTime CurrentSessionStart, System.DateTime CurrentSessionEnd, long TotalTime, System.TimeSpan TimeSpan) {
                 TaskRow rowTaskRow = ((TaskRow)(this.NewRow()));
                 object[] columnValuesArray = new object[] {
                         IDTask,
                         Application,
                         CurrentSessionStart,
                         CurrentSessionEnd,
-                        TotalTime};
+                        TotalTime,
+                        TimeSpan};
                 rowTaskRow.ItemArray = columnValuesArray;
                 this.Rows.Add(rowTaskRow);
                 return rowTaskRow;
@@ -441,6 +452,7 @@ namespace Task_Tracker {
                 this.columnCurrentSessionStart = base.Columns["CurrentSessionStart"];
                 this.columnCurrentSessionEnd = base.Columns["CurrentSessionEnd"];
                 this.columnTotalTime = base.Columns["TotalTime"];
+                this.columnTimeSpan = base.Columns["TimeSpan"];
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -456,6 +468,8 @@ namespace Task_Tracker {
                 base.Columns.Add(this.columnCurrentSessionEnd);
                 this.columnTotalTime = new global::System.Data.DataColumn("TotalTime", typeof(long), null, global::System.Data.MappingType.Element);
                 base.Columns.Add(this.columnTotalTime);
+                this.columnTimeSpan = new global::System.Data.DataColumn("TimeSpan", typeof(global::System.TimeSpan), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnTimeSpan);
                 this.Constraints.Add(new global::System.Data.UniqueConstraint("Constraint1", new global::System.Data.DataColumn[] {
                                 this.columnIDTask}, true));
                 this.columnIDTask.AllowDBNull = false;
@@ -674,6 +688,22 @@ namespace Task_Tracker {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public System.TimeSpan TimeSpan {
+                get {
+                    try {
+                        return ((global::System.TimeSpan)(this[this.tableTask.TimeSpanColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("The value for column \'TimeSpan\' in table \'Task\' is DBNull.", e);
+                    }
+                }
+                set {
+                    this[this.tableTask.TimeSpanColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
             public bool IsCurrentSessionStartNull() {
                 return this.IsNull(this.tableTask.CurrentSessionStartColumn);
             }
@@ -706,6 +736,18 @@ namespace Task_Tracker {
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
             public void SetTotalTimeNull() {
                 this[this.tableTask.TotalTimeColumn] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public bool IsTimeSpanNull() {
+                return this.IsNull(this.tableTask.TimeSpanColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public void SetTimeSpanNull() {
+                this[this.tableTask.TimeSpanColumn] = global::System.Convert.DBNull;
             }
         }
         
@@ -873,47 +915,53 @@ namespace Task_Tracker.TaskTrackerDataSetTableAdapters {
             tableMapping.ColumnMappings.Add("CurrentSessionStart", "CurrentSessionStart");
             tableMapping.ColumnMappings.Add("CurrentSessionEnd", "CurrentSessionEnd");
             tableMapping.ColumnMappings.Add("TotalTime", "TotalTime");
+            tableMapping.ColumnMappings.Add("TimeSpan", "TimeSpan");
             this._adapter.TableMappings.Add(tableMapping);
             this._adapter.DeleteCommand = new global::System.Data.SqlClient.SqlCommand();
             this._adapter.DeleteCommand.Connection = this.Connection;
-            this._adapter.DeleteCommand.CommandText = @"DELETE FROM [dbo].[Task] WHERE (([IDTask] = @Original_IDTask) AND ([Application] = @Original_Application) AND ((@IsNull_CurrentSessionStart = 1 AND [CurrentSessionStart] IS NULL) OR ([CurrentSessionStart] = @Original_CurrentSessionStart)) AND ((@IsNull_CurrentSessionEnd = 1 AND [CurrentSessionEnd] IS NULL) OR ([CurrentSessionEnd] = @Original_CurrentSessionEnd)) AND ((@IsNull_TotalTime = 1 AND [TotalTime] IS NULL) OR ([TotalTime] = @Original_TotalTime)))";
+            this._adapter.DeleteCommand.CommandText = @"DELETE FROM [Task] WHERE (([IDTask] = @Original_IDTask) AND ([Application] = @Original_Application) AND ((@IsNull_CurrentSessionStart = 1 AND [CurrentSessionStart] IS NULL) OR ([CurrentSessionStart] = @Original_CurrentSessionStart)) AND ((@IsNull_CurrentSessionEnd = 1 AND [CurrentSessionEnd] IS NULL) OR ([CurrentSessionEnd] = @Original_CurrentSessionEnd)) AND ((@IsNull_TotalTime = 1 AND [TotalTime] IS NULL) OR ([TotalTime] = @Original_TotalTime)) AND ((@IsNull_TimeSpan = 1 AND [TimeSpan] IS NULL) OR ([TimeSpan] = @Original_TimeSpan)))";
             this._adapter.DeleteCommand.CommandType = global::System.Data.CommandType.Text;
             this._adapter.DeleteCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@Original_IDTask", global::System.Data.SqlDbType.Int, 0, global::System.Data.ParameterDirection.Input, 0, 0, "IDTask", global::System.Data.DataRowVersion.Original, false, null, "", "", ""));
             this._adapter.DeleteCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@Original_Application", global::System.Data.SqlDbType.VarChar, 0, global::System.Data.ParameterDirection.Input, 0, 0, "Application", global::System.Data.DataRowVersion.Original, false, null, "", "", ""));
             this._adapter.DeleteCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@IsNull_CurrentSessionStart", global::System.Data.SqlDbType.Int, 0, global::System.Data.ParameterDirection.Input, 0, 0, "CurrentSessionStart", global::System.Data.DataRowVersion.Original, true, null, "", "", ""));
-            this._adapter.DeleteCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@Original_CurrentSessionStart", global::System.Data.SqlDbType.Time, 0, global::System.Data.ParameterDirection.Input, 0, 0, "CurrentSessionStart", global::System.Data.DataRowVersion.Original, false, null, "", "", ""));
+            this._adapter.DeleteCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@Original_CurrentSessionStart", global::System.Data.SqlDbType.DateTime, 0, global::System.Data.ParameterDirection.Input, 0, 0, "CurrentSessionStart", global::System.Data.DataRowVersion.Original, false, null, "", "", ""));
             this._adapter.DeleteCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@IsNull_CurrentSessionEnd", global::System.Data.SqlDbType.Int, 0, global::System.Data.ParameterDirection.Input, 0, 0, "CurrentSessionEnd", global::System.Data.DataRowVersion.Original, true, null, "", "", ""));
-            this._adapter.DeleteCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@Original_CurrentSessionEnd", global::System.Data.SqlDbType.Time, 0, global::System.Data.ParameterDirection.Input, 0, 0, "CurrentSessionEnd", global::System.Data.DataRowVersion.Original, false, null, "", "", ""));
+            this._adapter.DeleteCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@Original_CurrentSessionEnd", global::System.Data.SqlDbType.DateTime, 0, global::System.Data.ParameterDirection.Input, 0, 0, "CurrentSessionEnd", global::System.Data.DataRowVersion.Original, false, null, "", "", ""));
             this._adapter.DeleteCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@IsNull_TotalTime", global::System.Data.SqlDbType.Int, 0, global::System.Data.ParameterDirection.Input, 0, 0, "TotalTime", global::System.Data.DataRowVersion.Original, true, null, "", "", ""));
-            this._adapter.DeleteCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@Original_TotalTime", global::System.Data.SqlDbType.Time, 0, global::System.Data.ParameterDirection.Input, 0, 0, "TotalTime", global::System.Data.DataRowVersion.Original, false, null, "", "", ""));
+            this._adapter.DeleteCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@Original_TotalTime", global::System.Data.SqlDbType.BigInt, 0, global::System.Data.ParameterDirection.Input, 0, 0, "TotalTime", global::System.Data.DataRowVersion.Original, false, null, "", "", ""));
+            this._adapter.DeleteCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@IsNull_TimeSpan", global::System.Data.SqlDbType.Int, 0, global::System.Data.ParameterDirection.Input, 0, 0, "TimeSpan", global::System.Data.DataRowVersion.Original, true, null, "", "", ""));
+            this._adapter.DeleteCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@Original_TimeSpan", global::System.Data.SqlDbType.Time, 0, global::System.Data.ParameterDirection.Input, 0, 0, "TimeSpan", global::System.Data.DataRowVersion.Original, false, null, "", "", ""));
             this._adapter.InsertCommand = new global::System.Data.SqlClient.SqlCommand();
             this._adapter.InsertCommand.Connection = this.Connection;
-            this._adapter.InsertCommand.CommandText = @"INSERT INTO [dbo].[Task] ([IDTask], [Application], [CurrentSessionStart], [CurrentSessionEnd], [TotalTime]) VALUES (@IDTask, @Application, @CurrentSessionStart, @CurrentSessionEnd, @TotalTime);
-SELECT IDTask, Application, CurrentSessionStart, CurrentSessionEnd, TotalTime FROM Task WHERE (IDTask = @IDTask)";
+            this._adapter.InsertCommand.CommandText = @"INSERT INTO [Task] ([Application], [CurrentSessionStart], [CurrentSessionEnd], [TotalTime], [TimeSpan]) VALUES (@Application, @CurrentSessionStart, @CurrentSessionEnd, @TotalTime, @TimeSpan);
+SELECT IDTask, Application, CurrentSessionStart, CurrentSessionEnd, TotalTime, TimeSpan FROM Task WHERE (IDTask = SCOPE_IDENTITY())";
             this._adapter.InsertCommand.CommandType = global::System.Data.CommandType.Text;
-            this._adapter.InsertCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@IDTask", global::System.Data.SqlDbType.Int, 0, global::System.Data.ParameterDirection.Input, 0, 0, "IDTask", global::System.Data.DataRowVersion.Current, false, null, "", "", ""));
             this._adapter.InsertCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@Application", global::System.Data.SqlDbType.VarChar, 0, global::System.Data.ParameterDirection.Input, 0, 0, "Application", global::System.Data.DataRowVersion.Current, false, null, "", "", ""));
-            this._adapter.InsertCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@CurrentSessionStart", global::System.Data.SqlDbType.Time, 0, global::System.Data.ParameterDirection.Input, 0, 0, "CurrentSessionStart", global::System.Data.DataRowVersion.Current, false, null, "", "", ""));
-            this._adapter.InsertCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@CurrentSessionEnd", global::System.Data.SqlDbType.Time, 0, global::System.Data.ParameterDirection.Input, 0, 0, "CurrentSessionEnd", global::System.Data.DataRowVersion.Current, false, null, "", "", ""));
-            this._adapter.InsertCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@TotalTime", global::System.Data.SqlDbType.Time, 0, global::System.Data.ParameterDirection.Input, 0, 0, "TotalTime", global::System.Data.DataRowVersion.Current, false, null, "", "", ""));
+            this._adapter.InsertCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@CurrentSessionStart", global::System.Data.SqlDbType.DateTime, 0, global::System.Data.ParameterDirection.Input, 0, 0, "CurrentSessionStart", global::System.Data.DataRowVersion.Current, false, null, "", "", ""));
+            this._adapter.InsertCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@CurrentSessionEnd", global::System.Data.SqlDbType.DateTime, 0, global::System.Data.ParameterDirection.Input, 0, 0, "CurrentSessionEnd", global::System.Data.DataRowVersion.Current, false, null, "", "", ""));
+            this._adapter.InsertCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@TotalTime", global::System.Data.SqlDbType.BigInt, 0, global::System.Data.ParameterDirection.Input, 0, 0, "TotalTime", global::System.Data.DataRowVersion.Current, false, null, "", "", ""));
+            this._adapter.InsertCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@TimeSpan", global::System.Data.SqlDbType.Time, 0, global::System.Data.ParameterDirection.Input, 0, 0, "TimeSpan", global::System.Data.DataRowVersion.Current, false, null, "", "", ""));
             this._adapter.UpdateCommand = new global::System.Data.SqlClient.SqlCommand();
             this._adapter.UpdateCommand.Connection = this.Connection;
-            this._adapter.UpdateCommand.CommandText = @"UPDATE [dbo].[Task] SET [IDTask] = @IDTask, [Application] = @Application, [CurrentSessionStart] = @CurrentSessionStart, [CurrentSessionEnd] = @CurrentSessionEnd, [TotalTime] = @TotalTime WHERE (([IDTask] = @Original_IDTask) AND ([Application] = @Original_Application) AND ((@IsNull_CurrentSessionStart = 1 AND [CurrentSessionStart] IS NULL) OR ([CurrentSessionStart] = @Original_CurrentSessionStart)) AND ((@IsNull_CurrentSessionEnd = 1 AND [CurrentSessionEnd] IS NULL) OR ([CurrentSessionEnd] = @Original_CurrentSessionEnd)) AND ((@IsNull_TotalTime = 1 AND [TotalTime] IS NULL) OR ([TotalTime] = @Original_TotalTime)));
-SELECT IDTask, Application, CurrentSessionStart, CurrentSessionEnd, TotalTime FROM Task WHERE (IDTask = @IDTask)";
+            this._adapter.UpdateCommand.CommandText = @"UPDATE [Task] SET [Application] = @Application, [CurrentSessionStart] = @CurrentSessionStart, [CurrentSessionEnd] = @CurrentSessionEnd, [TotalTime] = @TotalTime, [TimeSpan] = @TimeSpan WHERE (([IDTask] = @Original_IDTask) AND ([Application] = @Original_Application) AND ((@IsNull_CurrentSessionStart = 1 AND [CurrentSessionStart] IS NULL) OR ([CurrentSessionStart] = @Original_CurrentSessionStart)) AND ((@IsNull_CurrentSessionEnd = 1 AND [CurrentSessionEnd] IS NULL) OR ([CurrentSessionEnd] = @Original_CurrentSessionEnd)) AND ((@IsNull_TotalTime = 1 AND [TotalTime] IS NULL) OR ([TotalTime] = @Original_TotalTime)) AND ((@IsNull_TimeSpan = 1 AND [TimeSpan] IS NULL) OR ([TimeSpan] = @Original_TimeSpan)));
+SELECT IDTask, Application, CurrentSessionStart, CurrentSessionEnd, TotalTime, TimeSpan FROM Task WHERE (IDTask = @IDTask)";
             this._adapter.UpdateCommand.CommandType = global::System.Data.CommandType.Text;
-            this._adapter.UpdateCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@IDTask", global::System.Data.SqlDbType.Int, 0, global::System.Data.ParameterDirection.Input, 0, 0, "IDTask", global::System.Data.DataRowVersion.Current, false, null, "", "", ""));
             this._adapter.UpdateCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@Application", global::System.Data.SqlDbType.VarChar, 0, global::System.Data.ParameterDirection.Input, 0, 0, "Application", global::System.Data.DataRowVersion.Current, false, null, "", "", ""));
-            this._adapter.UpdateCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@CurrentSessionStart", global::System.Data.SqlDbType.Time, 0, global::System.Data.ParameterDirection.Input, 0, 0, "CurrentSessionStart", global::System.Data.DataRowVersion.Current, false, null, "", "", ""));
-            this._adapter.UpdateCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@CurrentSessionEnd", global::System.Data.SqlDbType.Time, 0, global::System.Data.ParameterDirection.Input, 0, 0, "CurrentSessionEnd", global::System.Data.DataRowVersion.Current, false, null, "", "", ""));
-            this._adapter.UpdateCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@TotalTime", global::System.Data.SqlDbType.Time, 0, global::System.Data.ParameterDirection.Input, 0, 0, "TotalTime", global::System.Data.DataRowVersion.Current, false, null, "", "", ""));
+            this._adapter.UpdateCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@CurrentSessionStart", global::System.Data.SqlDbType.DateTime, 0, global::System.Data.ParameterDirection.Input, 0, 0, "CurrentSessionStart", global::System.Data.DataRowVersion.Current, false, null, "", "", ""));
+            this._adapter.UpdateCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@CurrentSessionEnd", global::System.Data.SqlDbType.DateTime, 0, global::System.Data.ParameterDirection.Input, 0, 0, "CurrentSessionEnd", global::System.Data.DataRowVersion.Current, false, null, "", "", ""));
+            this._adapter.UpdateCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@TotalTime", global::System.Data.SqlDbType.BigInt, 0, global::System.Data.ParameterDirection.Input, 0, 0, "TotalTime", global::System.Data.DataRowVersion.Current, false, null, "", "", ""));
+            this._adapter.UpdateCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@TimeSpan", global::System.Data.SqlDbType.Time, 0, global::System.Data.ParameterDirection.Input, 0, 0, "TimeSpan", global::System.Data.DataRowVersion.Current, false, null, "", "", ""));
             this._adapter.UpdateCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@Original_IDTask", global::System.Data.SqlDbType.Int, 0, global::System.Data.ParameterDirection.Input, 0, 0, "IDTask", global::System.Data.DataRowVersion.Original, false, null, "", "", ""));
             this._adapter.UpdateCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@Original_Application", global::System.Data.SqlDbType.VarChar, 0, global::System.Data.ParameterDirection.Input, 0, 0, "Application", global::System.Data.DataRowVersion.Original, false, null, "", "", ""));
             this._adapter.UpdateCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@IsNull_CurrentSessionStart", global::System.Data.SqlDbType.Int, 0, global::System.Data.ParameterDirection.Input, 0, 0, "CurrentSessionStart", global::System.Data.DataRowVersion.Original, true, null, "", "", ""));
-            this._adapter.UpdateCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@Original_CurrentSessionStart", global::System.Data.SqlDbType.Time, 0, global::System.Data.ParameterDirection.Input, 0, 0, "CurrentSessionStart", global::System.Data.DataRowVersion.Original, false, null, "", "", ""));
+            this._adapter.UpdateCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@Original_CurrentSessionStart", global::System.Data.SqlDbType.DateTime, 0, global::System.Data.ParameterDirection.Input, 0, 0, "CurrentSessionStart", global::System.Data.DataRowVersion.Original, false, null, "", "", ""));
             this._adapter.UpdateCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@IsNull_CurrentSessionEnd", global::System.Data.SqlDbType.Int, 0, global::System.Data.ParameterDirection.Input, 0, 0, "CurrentSessionEnd", global::System.Data.DataRowVersion.Original, true, null, "", "", ""));
-            this._adapter.UpdateCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@Original_CurrentSessionEnd", global::System.Data.SqlDbType.Time, 0, global::System.Data.ParameterDirection.Input, 0, 0, "CurrentSessionEnd", global::System.Data.DataRowVersion.Original, false, null, "", "", ""));
+            this._adapter.UpdateCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@Original_CurrentSessionEnd", global::System.Data.SqlDbType.DateTime, 0, global::System.Data.ParameterDirection.Input, 0, 0, "CurrentSessionEnd", global::System.Data.DataRowVersion.Original, false, null, "", "", ""));
             this._adapter.UpdateCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@IsNull_TotalTime", global::System.Data.SqlDbType.Int, 0, global::System.Data.ParameterDirection.Input, 0, 0, "TotalTime", global::System.Data.DataRowVersion.Original, true, null, "", "", ""));
-            this._adapter.UpdateCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@Original_TotalTime", global::System.Data.SqlDbType.Time, 0, global::System.Data.ParameterDirection.Input, 0, 0, "TotalTime", global::System.Data.DataRowVersion.Original, false, null, "", "", ""));
+            this._adapter.UpdateCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@Original_TotalTime", global::System.Data.SqlDbType.BigInt, 0, global::System.Data.ParameterDirection.Input, 0, 0, "TotalTime", global::System.Data.DataRowVersion.Original, false, null, "", "", ""));
+            this._adapter.UpdateCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@IsNull_TimeSpan", global::System.Data.SqlDbType.Int, 0, global::System.Data.ParameterDirection.Input, 0, 0, "TimeSpan", global::System.Data.DataRowVersion.Original, true, null, "", "", ""));
+            this._adapter.UpdateCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@Original_TimeSpan", global::System.Data.SqlDbType.Time, 0, global::System.Data.ParameterDirection.Input, 0, 0, "TimeSpan", global::System.Data.DataRowVersion.Original, false, null, "", "", ""));
+            this._adapter.UpdateCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@IDTask", global::System.Data.SqlDbType.Int, 4, global::System.Data.ParameterDirection.Input, 0, 0, "IDTask", global::System.Data.DataRowVersion.Current, false, null, "", "", ""));
         }
         
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -929,8 +977,8 @@ SELECT IDTask, Application, CurrentSessionStart, CurrentSessionEnd, TotalTime FR
             this._commandCollection = new global::System.Data.SqlClient.SqlCommand[1];
             this._commandCollection[0] = new global::System.Data.SqlClient.SqlCommand();
             this._commandCollection[0].Connection = this.Connection;
-            this._commandCollection[0].CommandText = "SELECT IDTask, Application, CurrentSessionStart, CurrentSessionEnd, TotalTime FRO" +
-                "M dbo.Task";
+            this._commandCollection[0].CommandText = "SELECT IDTask, Application, CurrentSessionStart, CurrentSessionEnd, TotalTime, Ti" +
+                "meSpan FROM Task";
             this._commandCollection[0].CommandType = global::System.Data.CommandType.Text;
         }
         
@@ -991,7 +1039,7 @@ SELECT IDTask, Application, CurrentSessionStart, CurrentSessionEnd, TotalTime FR
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
         [global::System.ComponentModel.Design.HelpKeywordAttribute("vs.data.TableAdapter")]
         [global::System.ComponentModel.DataObjectMethodAttribute(global::System.ComponentModel.DataObjectMethodType.Delete, true)]
-        public virtual int Delete(int Original_IDTask, string Original_Application, global::System.Nullable<global::System.TimeSpan> Original_CurrentSessionStart, global::System.Nullable<global::System.TimeSpan> Original_CurrentSessionEnd, global::System.Nullable<global::System.TimeSpan> Original_TotalTime) {
+        public virtual int Delete(int Original_IDTask, string Original_Application, global::System.Nullable<global::System.DateTime> Original_CurrentSessionStart, global::System.Nullable<global::System.DateTime> Original_CurrentSessionEnd, global::System.Nullable<long> Original_TotalTime, global::System.Nullable<global::System.TimeSpan> Original_TimeSpan) {
             this.Adapter.DeleteCommand.Parameters[0].Value = ((int)(Original_IDTask));
             if ((Original_Application == null)) {
                 throw new global::System.ArgumentNullException("Original_Application");
@@ -1001,7 +1049,7 @@ SELECT IDTask, Application, CurrentSessionStart, CurrentSessionEnd, TotalTime FR
             }
             if ((Original_CurrentSessionStart.HasValue == true)) {
                 this.Adapter.DeleteCommand.Parameters[2].Value = ((object)(0));
-                this.Adapter.DeleteCommand.Parameters[3].Value = ((System.TimeSpan)(Original_CurrentSessionStart.Value));
+                this.Adapter.DeleteCommand.Parameters[3].Value = ((System.DateTime)(Original_CurrentSessionStart.Value));
             }
             else {
                 this.Adapter.DeleteCommand.Parameters[2].Value = ((object)(1));
@@ -1009,7 +1057,7 @@ SELECT IDTask, Application, CurrentSessionStart, CurrentSessionEnd, TotalTime FR
             }
             if ((Original_CurrentSessionEnd.HasValue == true)) {
                 this.Adapter.DeleteCommand.Parameters[4].Value = ((object)(0));
-                this.Adapter.DeleteCommand.Parameters[5].Value = ((System.TimeSpan)(Original_CurrentSessionEnd.Value));
+                this.Adapter.DeleteCommand.Parameters[5].Value = ((System.DateTime)(Original_CurrentSessionEnd.Value));
             }
             else {
                 this.Adapter.DeleteCommand.Parameters[4].Value = ((object)(1));
@@ -1017,11 +1065,19 @@ SELECT IDTask, Application, CurrentSessionStart, CurrentSessionEnd, TotalTime FR
             }
             if ((Original_TotalTime.HasValue == true)) {
                 this.Adapter.DeleteCommand.Parameters[6].Value = ((object)(0));
-                this.Adapter.DeleteCommand.Parameters[7].Value = ((System.TimeSpan)(Original_TotalTime.Value));
+                this.Adapter.DeleteCommand.Parameters[7].Value = ((long)(Original_TotalTime.Value));
             }
             else {
                 this.Adapter.DeleteCommand.Parameters[6].Value = ((object)(1));
                 this.Adapter.DeleteCommand.Parameters[7].Value = global::System.DBNull.Value;
+            }
+            if ((Original_TimeSpan.HasValue == true)) {
+                this.Adapter.DeleteCommand.Parameters[8].Value = ((object)(0));
+                this.Adapter.DeleteCommand.Parameters[9].Value = ((System.TimeSpan)(Original_TimeSpan.Value));
+            }
+            else {
+                this.Adapter.DeleteCommand.Parameters[8].Value = ((object)(1));
+                this.Adapter.DeleteCommand.Parameters[9].Value = global::System.DBNull.Value;
             }
             global::System.Data.ConnectionState previousConnectionState = this.Adapter.DeleteCommand.Connection.State;
             if (((this.Adapter.DeleteCommand.Connection.State & global::System.Data.ConnectionState.Open) 
@@ -1043,28 +1099,33 @@ SELECT IDTask, Application, CurrentSessionStart, CurrentSessionEnd, TotalTime FR
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
         [global::System.ComponentModel.Design.HelpKeywordAttribute("vs.data.TableAdapter")]
         [global::System.ComponentModel.DataObjectMethodAttribute(global::System.ComponentModel.DataObjectMethodType.Insert, true)]
-        public virtual int Insert(int IDTask, string Application, global::System.Nullable<global::System.TimeSpan> CurrentSessionStart, global::System.Nullable<global::System.TimeSpan> CurrentSessionEnd, global::System.Nullable<global::System.TimeSpan> TotalTime) {
-            this.Adapter.InsertCommand.Parameters[0].Value = ((int)(IDTask));
+        public virtual int Insert(string Application, global::System.Nullable<global::System.DateTime> CurrentSessionStart, global::System.Nullable<global::System.DateTime> CurrentSessionEnd, global::System.Nullable<long> TotalTime, global::System.Nullable<global::System.TimeSpan> TimeSpan) {
             if ((Application == null)) {
                 throw new global::System.ArgumentNullException("Application");
             }
             else {
-                this.Adapter.InsertCommand.Parameters[1].Value = ((string)(Application));
+                this.Adapter.InsertCommand.Parameters[0].Value = ((string)(Application));
             }
             if ((CurrentSessionStart.HasValue == true)) {
-                this.Adapter.InsertCommand.Parameters[2].Value = ((System.TimeSpan)(CurrentSessionStart.Value));
+                this.Adapter.InsertCommand.Parameters[1].Value = ((System.DateTime)(CurrentSessionStart.Value));
+            }
+            else {
+                this.Adapter.InsertCommand.Parameters[1].Value = global::System.DBNull.Value;
+            }
+            if ((CurrentSessionEnd.HasValue == true)) {
+                this.Adapter.InsertCommand.Parameters[2].Value = ((System.DateTime)(CurrentSessionEnd.Value));
             }
             else {
                 this.Adapter.InsertCommand.Parameters[2].Value = global::System.DBNull.Value;
             }
-            if ((CurrentSessionEnd.HasValue == true)) {
-                this.Adapter.InsertCommand.Parameters[3].Value = ((System.TimeSpan)(CurrentSessionEnd.Value));
+            if ((TotalTime.HasValue == true)) {
+                this.Adapter.InsertCommand.Parameters[3].Value = ((long)(TotalTime.Value));
             }
             else {
                 this.Adapter.InsertCommand.Parameters[3].Value = global::System.DBNull.Value;
             }
-            if ((TotalTime.HasValue == true)) {
-                this.Adapter.InsertCommand.Parameters[4].Value = ((System.TimeSpan)(TotalTime.Value));
+            if ((TimeSpan.HasValue == true)) {
+                this.Adapter.InsertCommand.Parameters[4].Value = ((System.TimeSpan)(TimeSpan.Value));
             }
             else {
                 this.Adapter.InsertCommand.Parameters[4].Value = global::System.DBNull.Value;
@@ -1089,28 +1150,33 @@ SELECT IDTask, Application, CurrentSessionStart, CurrentSessionEnd, TotalTime FR
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
         [global::System.ComponentModel.Design.HelpKeywordAttribute("vs.data.TableAdapter")]
         [global::System.ComponentModel.DataObjectMethodAttribute(global::System.ComponentModel.DataObjectMethodType.Update, true)]
-        public virtual int Update(int IDTask, string Application, global::System.Nullable<global::System.TimeSpan> CurrentSessionStart, global::System.Nullable<global::System.TimeSpan> CurrentSessionEnd, global::System.Nullable<global::System.TimeSpan> TotalTime, int Original_IDTask, string Original_Application, global::System.Nullable<global::System.TimeSpan> Original_CurrentSessionStart, global::System.Nullable<global::System.TimeSpan> Original_CurrentSessionEnd, global::System.Nullable<global::System.TimeSpan> Original_TotalTime) {
-            this.Adapter.UpdateCommand.Parameters[0].Value = ((int)(IDTask));
+        public virtual int Update(string Application, global::System.Nullable<global::System.DateTime> CurrentSessionStart, global::System.Nullable<global::System.DateTime> CurrentSessionEnd, global::System.Nullable<long> TotalTime, global::System.Nullable<global::System.TimeSpan> TimeSpan, int Original_IDTask, string Original_Application, global::System.Nullable<global::System.DateTime> Original_CurrentSessionStart, global::System.Nullable<global::System.DateTime> Original_CurrentSessionEnd, global::System.Nullable<long> Original_TotalTime, global::System.Nullable<global::System.TimeSpan> Original_TimeSpan, int IDTask) {
             if ((Application == null)) {
                 throw new global::System.ArgumentNullException("Application");
             }
             else {
-                this.Adapter.UpdateCommand.Parameters[1].Value = ((string)(Application));
+                this.Adapter.UpdateCommand.Parameters[0].Value = ((string)(Application));
             }
             if ((CurrentSessionStart.HasValue == true)) {
-                this.Adapter.UpdateCommand.Parameters[2].Value = ((System.TimeSpan)(CurrentSessionStart.Value));
+                this.Adapter.UpdateCommand.Parameters[1].Value = ((System.DateTime)(CurrentSessionStart.Value));
+            }
+            else {
+                this.Adapter.UpdateCommand.Parameters[1].Value = global::System.DBNull.Value;
+            }
+            if ((CurrentSessionEnd.HasValue == true)) {
+                this.Adapter.UpdateCommand.Parameters[2].Value = ((System.DateTime)(CurrentSessionEnd.Value));
             }
             else {
                 this.Adapter.UpdateCommand.Parameters[2].Value = global::System.DBNull.Value;
             }
-            if ((CurrentSessionEnd.HasValue == true)) {
-                this.Adapter.UpdateCommand.Parameters[3].Value = ((System.TimeSpan)(CurrentSessionEnd.Value));
+            if ((TotalTime.HasValue == true)) {
+                this.Adapter.UpdateCommand.Parameters[3].Value = ((long)(TotalTime.Value));
             }
             else {
                 this.Adapter.UpdateCommand.Parameters[3].Value = global::System.DBNull.Value;
             }
-            if ((TotalTime.HasValue == true)) {
-                this.Adapter.UpdateCommand.Parameters[4].Value = ((System.TimeSpan)(TotalTime.Value));
+            if ((TimeSpan.HasValue == true)) {
+                this.Adapter.UpdateCommand.Parameters[4].Value = ((System.TimeSpan)(TimeSpan.Value));
             }
             else {
                 this.Adapter.UpdateCommand.Parameters[4].Value = global::System.DBNull.Value;
@@ -1124,7 +1190,7 @@ SELECT IDTask, Application, CurrentSessionStart, CurrentSessionEnd, TotalTime FR
             }
             if ((Original_CurrentSessionStart.HasValue == true)) {
                 this.Adapter.UpdateCommand.Parameters[7].Value = ((object)(0));
-                this.Adapter.UpdateCommand.Parameters[8].Value = ((System.TimeSpan)(Original_CurrentSessionStart.Value));
+                this.Adapter.UpdateCommand.Parameters[8].Value = ((System.DateTime)(Original_CurrentSessionStart.Value));
             }
             else {
                 this.Adapter.UpdateCommand.Parameters[7].Value = ((object)(1));
@@ -1132,7 +1198,7 @@ SELECT IDTask, Application, CurrentSessionStart, CurrentSessionEnd, TotalTime FR
             }
             if ((Original_CurrentSessionEnd.HasValue == true)) {
                 this.Adapter.UpdateCommand.Parameters[9].Value = ((object)(0));
-                this.Adapter.UpdateCommand.Parameters[10].Value = ((System.TimeSpan)(Original_CurrentSessionEnd.Value));
+                this.Adapter.UpdateCommand.Parameters[10].Value = ((System.DateTime)(Original_CurrentSessionEnd.Value));
             }
             else {
                 this.Adapter.UpdateCommand.Parameters[9].Value = ((object)(1));
@@ -1140,12 +1206,21 @@ SELECT IDTask, Application, CurrentSessionStart, CurrentSessionEnd, TotalTime FR
             }
             if ((Original_TotalTime.HasValue == true)) {
                 this.Adapter.UpdateCommand.Parameters[11].Value = ((object)(0));
-                this.Adapter.UpdateCommand.Parameters[12].Value = ((System.TimeSpan)(Original_TotalTime.Value));
+                this.Adapter.UpdateCommand.Parameters[12].Value = ((long)(Original_TotalTime.Value));
             }
             else {
                 this.Adapter.UpdateCommand.Parameters[11].Value = ((object)(1));
                 this.Adapter.UpdateCommand.Parameters[12].Value = global::System.DBNull.Value;
             }
+            if ((Original_TimeSpan.HasValue == true)) {
+                this.Adapter.UpdateCommand.Parameters[13].Value = ((object)(0));
+                this.Adapter.UpdateCommand.Parameters[14].Value = ((System.TimeSpan)(Original_TimeSpan.Value));
+            }
+            else {
+                this.Adapter.UpdateCommand.Parameters[13].Value = ((object)(1));
+                this.Adapter.UpdateCommand.Parameters[14].Value = global::System.DBNull.Value;
+            }
+            this.Adapter.UpdateCommand.Parameters[15].Value = ((int)(IDTask));
             global::System.Data.ConnectionState previousConnectionState = this.Adapter.UpdateCommand.Connection.State;
             if (((this.Adapter.UpdateCommand.Connection.State & global::System.Data.ConnectionState.Open) 
                         != global::System.Data.ConnectionState.Open)) {
@@ -1166,8 +1241,8 @@ SELECT IDTask, Application, CurrentSessionStart, CurrentSessionEnd, TotalTime FR
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
         [global::System.ComponentModel.Design.HelpKeywordAttribute("vs.data.TableAdapter")]
         [global::System.ComponentModel.DataObjectMethodAttribute(global::System.ComponentModel.DataObjectMethodType.Update, true)]
-        public virtual int Update(string Application, global::System.Nullable<global::System.TimeSpan> CurrentSessionStart, global::System.Nullable<global::System.TimeSpan> CurrentSessionEnd, global::System.Nullable<global::System.TimeSpan> TotalTime, int Original_IDTask, string Original_Application, global::System.Nullable<global::System.TimeSpan> Original_CurrentSessionStart, global::System.Nullable<global::System.TimeSpan> Original_CurrentSessionEnd, global::System.Nullable<global::System.TimeSpan> Original_TotalTime) {
-            return this.Update(Original_IDTask, Application, CurrentSessionStart, CurrentSessionEnd, TotalTime, Original_IDTask, Original_Application, Original_CurrentSessionStart, Original_CurrentSessionEnd, Original_TotalTime);
+        public virtual int Update(string Application, global::System.Nullable<global::System.DateTime> CurrentSessionStart, global::System.Nullable<global::System.DateTime> CurrentSessionEnd, global::System.Nullable<long> TotalTime, global::System.Nullable<global::System.TimeSpan> TimeSpan, int Original_IDTask, string Original_Application, global::System.Nullable<global::System.DateTime> Original_CurrentSessionStart, global::System.Nullable<global::System.DateTime> Original_CurrentSessionEnd, global::System.Nullable<long> Original_TotalTime, global::System.Nullable<global::System.TimeSpan> Original_TimeSpan) {
+            return this.Update(Application, CurrentSessionStart, CurrentSessionEnd, TotalTime, TimeSpan, Original_IDTask, Original_Application, Original_CurrentSessionStart, Original_CurrentSessionEnd, Original_TotalTime, Original_TimeSpan, Original_IDTask);
         }
     }
     

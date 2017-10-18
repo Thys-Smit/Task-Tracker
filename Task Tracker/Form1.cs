@@ -28,19 +28,11 @@ namespace Task_Tracker
 
         }
 
-        public void UpdateGridView()
+        private void Refresh(object sender, EventArgs e)
         {
-           // this.taskTrackerDataSet.Clear();
-           // DataSet ds = db.getTaskDataSet();
-
-           // this.dataGridView1.DataSource = null;
-           // //dataGridView1.DataSource = ds;
-           //// dataGridView1.Update();
-           // //dataGridView1.Refresh();
-           // //IDataAdapter da;
-           // //da.Fill(taskTrackerDataSet);
-            
-           // this.Refresh();
+            this.taskTableAdapter.Fill(this.taskTrackerDataSet.Task);
         }
+
+        
     }
 }
