@@ -57,8 +57,7 @@ namespace Task_Tracker
 
         public void insertNewTask(string strTitle, DateTime currentStartTime)
         {
-            //conn.Open();
-
+            
             //Insert SQL Command
             SqlCommand insertCommand = new SqlCommand
             (

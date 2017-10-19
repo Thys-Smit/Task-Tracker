@@ -22,7 +22,7 @@ namespace Task_Tracker
 
         System.Timers.Timer aTimer = new System.Timers.Timer();
 
-        Form1 mainForm = new Form1();
+        frmProjectTracker mainForm = new frmProjectTracker();
 
         DBOperations db = new DBOperations();
 
@@ -45,7 +45,7 @@ namespace Task_Tracker
             {
                 stopTimer();
             }
-            else
+            else if (strTitle != null)
             {
 
                 //TODO :Impliment advanced regex filtering to determine the application name correctly. The current string manipulation caters for a specific scenario.
@@ -64,7 +64,7 @@ namespace Task_Tracker
                 //Is it a brand new task - Then insert a new task into the Task table.
                 //Is it a new session of a existing task - Then update the start time and end time.
                 //Is it the same task as in the previous interval - Then only update the endtime of this task.
-                //Note : When a new task is active (be it a brand new task or a new session of a existing task) the previous task' total time should be updated. 
+                //Note : When a new task is active (be it a brand new task or a new session of a existing task) the previous task's total time should be updated. 
                 if (strPreviousTitle != strTitle)
                 { 
                     if (db.isValidApplication(strApplication) && !db.isTaskMatch(strTitle))
@@ -92,7 +92,6 @@ namespace Task_Tracker
                 //Close the DB Connection and restart the timer.
                 db.closeDBConn();
                 startTimer();
-               
             }
 
         }
@@ -108,6 +107,7 @@ namespace Task_Tracker
 
             if (GetWindowText(handle, Buff, nChars) > 0)
             {
+                Debug.Print(Buff.ToString());
                 return Buff.ToString();
             }
             return null;

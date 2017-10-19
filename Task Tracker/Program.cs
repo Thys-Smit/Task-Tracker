@@ -20,7 +20,7 @@ namespace Task_Tracker
             
             CoreOperations _bo = new CoreOperations();
             _bo.startTimer();
-            Application.Run(new Form1());
+            Application.Run(new frmProjectTracker());
         }
 
     } 
