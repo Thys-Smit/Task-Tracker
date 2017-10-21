@@ -30,7 +30,7 @@ SELECT IDApplication, ApplicationName FROM Applications WHERE (IDApplication = S
                 </InsertCommand>
                 <SelectCommand>
                   <DbCommand CommandType="Text" ModifiedByUser="true">
-                    <CommandText>SELECT IDApplication, ApplicationName FROM Applications WHERE (isActive = 0)</CommandText>
+                    <CommandText>SELECT IDApplication, ApplicationName FROM Applications WHERE (isActive = 0) AND Inactive = 0</CommandText>
                     <Parameters />
                   </DbCommand>
                 </SelectCommand>
@@ -76,8 +76,8 @@ SELECT IDApplication, ApplicationName FROM Applications WHERE (IDApplication = S
                   </DbCommand>
                 </InsertCommand>
                 <SelectCommand>
-                  <DbCommand CommandType="Text" ModifiedByUser="false">
-                    <CommandText>SELECT IDApplication, ApplicationName FROM Applications WHERE (isActive = 1)</CommandText>
+                  <DbCommand CommandType="Text" ModifiedByUser="true">
+                    <CommandText>SELECT IDApplication, ApplicationName FROM Applications WHERE (isActive = 1) AND Inactive = 0</CommandText>
                     <Parameters />
                   </DbCommand>
                 </SelectCommand>
@@ -109,7 +109,7 @@ SELECT IDApplication, ApplicationName FROM Applications WHERE (IDApplication = @
   <xs:element name="applicationsDataSet" msdata:IsDataSet="true" msdata:UseCurrentLocale="true" msprop:EnableTableAdapterManager="True" msprop:Generator_DataSetName="applicationsDataSet" msprop:Generator_UserDSName="applicationsDataSet">
     <xs:complexType>
       <xs:choice minOccurs="0" maxOccurs="unbounded">
-        <xs:element name="InactiveApplications" msprop:Generator_TableClassName="InactiveApplicationsDataTable" msprop:Generator_TableVarName="tableInactiveApplications" msprop:Generator_RowChangedName="InactiveApplicationsRowChanged" msprop:Generator_TablePropName="InactiveApplications" msprop:Generator_RowDeletingName="InactiveApplicationsRowDeleting" msprop:Generator_RowChangingName="InactiveApplicationsRowChanging" msprop:Generator_RowEvHandlerName="InactiveApplicationsRowChangeEventHandler" msprop:Generator_RowDeletedName="InactiveApplicationsRowDeleted" msprop:Generator_RowClassName="InactiveApplicationsRow" msprop:Generator_UserTableName="InactiveApplications" msprop:Generator_RowEvArgName="InactiveApplicationsRowChangeEvent">
+        <xs:element name="InactiveApplications" msprop:Generator_TableClassName="InactiveApplicationsDataTable" msprop:Generator_TableVarName="tableInactiveApplications" msprop:Generator_TablePropName="InactiveApplications" msprop:Generator_RowDeletingName="InactiveApplicationsRowDeleting" msprop:Generator_RowChangingName="InactiveApplicationsRowChanging" msprop:Generator_RowEvHandlerName="InactiveApplicationsRowChangeEventHandler" msprop:Generator_RowDeletedName="InactiveApplicationsRowDeleted" msprop:Generator_UserTableName="InactiveApplications" msprop:Generator_RowChangedName="InactiveApplicationsRowChanged" msprop:Generator_RowEvArgName="InactiveApplicationsRowChangeEvent" msprop:Generator_RowClassName="InactiveApplicationsRow">
           <xs:complexType>
             <xs:sequence>
               <xs:element name="IDApplication" msdata:ReadOnly="true" msdata:AutoIncrement="true" msdata:AutoIncrementSeed="-1" msdata:AutoIncrementStep="-1" msprop:Generator_ColumnVarNameInTable="columnIDApplication" msprop:Generator_ColumnPropNameInRow="IDApplication" msprop:Generator_ColumnPropNameInTable="IDApplicationColumn" msprop:Generator_UserColumnName="IDApplication" type="xs:int" />
@@ -123,7 +123,7 @@ SELECT IDApplication, ApplicationName FROM Applications WHERE (IDApplication = @
             </xs:sequence>
           </xs:complexType>
         </xs:element>
-        <xs:element name="ActiveApplications" msprop:Generator_TableClassName="ActiveApplicationsDataTable" msprop:Generator_TableVarName="tableActiveApplications" msprop:Generator_TablePropName="ActiveApplications" msprop:Generator_RowDeletingName="ActiveApplicationsRowDeleting" msprop:Generator_RowChangingName="ActiveApplicationsRowChanging" msprop:Generator_RowEvHandlerName="ActiveApplicationsRowChangeEventHandler" msprop:Generator_RowDeletedName="ActiveApplicationsRowDeleted" msprop:Generator_UserTableName="ActiveApplications" msprop:Generator_RowChangedName="ActiveApplicationsRowChanged" msprop:Generator_RowEvArgName="ActiveApplicationsRowChangeEvent" msprop:Generator_RowClassName="ActiveApplicationsRow">
+        <xs:element name="ActiveApplications" msprop:Generator_TableClassName="ActiveApplicationsDataTable" msprop:Generator_TableVarName="tableActiveApplications" msprop:Generator_RowChangedName="ActiveApplicationsRowChanged" msprop:Generator_TablePropName="ActiveApplications" msprop:Generator_RowDeletingName="ActiveApplicationsRowDeleting" msprop:Generator_RowChangingName="ActiveApplicationsRowChanging" msprop:Generator_RowEvHandlerName="ActiveApplicationsRowChangeEventHandler" msprop:Generator_RowDeletedName="ActiveApplicationsRowDeleted" msprop:Generator_RowClassName="ActiveApplicationsRow" msprop:Generator_UserTableName="ActiveApplications" msprop:Generator_RowEvArgName="ActiveApplicationsRowChangeEvent">
           <xs:complexType>
             <xs:sequence>
               <xs:element name="IDApplication" msdata:ReadOnly="true" msdata:AutoIncrement="true" msdata:AutoIncrementSeed="-1" msdata:AutoIncrementStep="-1" msprop:Generator_ColumnVarNameInTable="columnIDApplication" msprop:Generator_ColumnPropNameInRow="IDApplication" msprop:Generator_ColumnPropNameInTable="IDApplicationColumn" msprop:Generator_UserColumnName="IDApplication" type="xs:int" />

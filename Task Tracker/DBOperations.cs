@@ -15,8 +15,16 @@ namespace Task_Tracker
     {
         #region Declarations
         SqlConnection conn = new SqlConnection();
+        //TODO : Get connection string from AppData
+        string connString = "Data Source=(localdb)\\MSSQLLocalDB;Initial Catalog = TaskTracker; Integrated Security = True";
         #endregion
-        //Test the connection to the database
+
+        #region Database Connection
+        /// <summary>
+        /// Test the connection to the database
+        /// </summary>
+        /// <param name="connString"></param>
+        /// <returns></returns>
         public bool testDBConnection(string connString)
         {
             try
@@ -33,6 +41,11 @@ namespace Task_Tracker
             }
         }
 
+        /// <summary>
+        ///  Connect to database
+        /// </summary>
+        /// <param name="connString"></param>
+        /// <returns></returns>
         public bool connectToDB(string connString)
         {
             if (conn.State != System.Data.ConnectionState.Open)
@@ -50,10 +63,17 @@ namespace Task_Tracker
             
         }
 
+        /// <summary>
+        /// //Close database connection
+        /// </summary>
         public void closeDBConn()
         {
             conn.Close();
         }
+
+        #endregion
+
+        #region Project File Tracking Logic & Validation
 
         public void insertNewTask(string strTitle, DateTime currentStartTime)
         {
@@ -89,14 +109,14 @@ namespace Task_Tracker
             //Select SQL Command 
             SqlCommand selectStatement = new SqlCommand
             (
-                "SELECT Count(IDApplication) FROM Applications WHERE ApplicationName LIKE @strTitle", conn
+                "SELECT Count(IDApplication) FROM Applications WHERE ApplicationName LIKE @strTitle AND isActive = 1", conn
             );
             //Add Params
             selectStatement.Parameters.Add(new SqlParameter("strTitle", "%" + strTitle));
 
             try
             {
-                if (conn.State != System.Data.ConnectionState.Open) conn.Open();
+               // if (conn.State != System.Data.ConnectionState.Open) conn.Open();
                 selectStatement.ExecuteNonQuery();
                 SqlDataReader reader = selectStatement.ExecuteReader();
                 reader.Read();
@@ -308,6 +328,108 @@ namespace Task_Tracker
 
         }
 
-}
+        #endregion
+
+        #region Application Table Logic & Validation
+
+        /// <summary>
+        /// Add a new application to the Applications DB
+        /// </summary>
+        /// <param name="strAppName"></param>
+        public void addApplication(string strAppName)
+        {
+            connectToDB(connString);
+
+            //Update SQL Command
+            SqlCommand insertCommand = new SqlCommand
+            (
+                "IF NOT EXISTS(SELECT ApplicationName FROM Applications WHERE ApplicationName = @strAppName) " +
+                "BEGIN " +
+                "INSERT INTO Applications VALUES(@strAppName, 0, null, 0) " +
+                "END " +
+                "ELSE " +
+                "BEGIN " +
+                    "RAISERROR('The application name you are trying to add already exists', 16, 1) " +
+                "END", conn
+            );
+            //Add Params
+            insertCommand.Parameters.Add(new SqlParameter("strAppName", strAppName));
+            
+
+            try
+            {
+                insertCommand.ExecuteNonQuery();
+            }
+            catch (SqlException ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+            finally
+            {
+                closeDBConn();
+            }
+        }
+
+        /// <summary>
+        /// Change the application isActive state to true to allow the tracker to track it.
+        /// </summary>
+        /// <param name="strAppName"></param>
+        public void makeApplicationActive(string strAppName)
+        {
+            connectToDB(connString);
+
+            //Update SQL Command
+            SqlCommand updateCommand = new SqlCommand
+            (
+                "UPDATE Applications SET isActive = 1 WHERE ApplicationName = @strAppName", conn
+            );
+            //Add Params
+            updateCommand.Parameters.Add(new SqlParameter("strAppName", strAppName));
+
+            try
+            {
+                updateCommand.ExecuteNonQuery();
+            }
+            catch (SqlException ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+            finally
+            {
+                closeDBConn();
+            }
+        }
+
+        /// <summary>
+        /// Change the application isActive state to false. The tracker will then ignore this application.
+        /// </summary>
+        /// <param name="strAppName"></param>
+        public void makeApplicationInactive(string strAppName)
+        {
+            connectToDB(connString);
+
+            //Update SQL Command
+            SqlCommand updateCommand = new SqlCommand
+            (
+                "UPDATE Applications SET isActive = 0 WHERE ApplicationName = @strAppName", conn
+            );
+            //Add Params
+            updateCommand.Parameters.Add(new SqlParameter("strAppName", strAppName));
+
+            try
+            {
+                updateCommand.ExecuteNonQuery();
+            }
+            catch (SqlException ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+            finally
+            {
+                closeDBConn();
+            }
+        }
+        #endregion
+    }
 }
 

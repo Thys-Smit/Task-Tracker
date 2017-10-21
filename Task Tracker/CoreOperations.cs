@@ -22,10 +22,9 @@ namespace Task_Tracker
 
         System.Timers.Timer aTimer = new System.Timers.Timer();
 
-        frmProjectTracker mainForm = new frmProjectTracker();
-
         DBOperations db = new DBOperations();
 
+        //TODO : Get connection string from AppData
         string connString = "Data Source=(localdb)\\MSSQLLocalDB;Initial Catalog = TaskTracker; Integrated Security = True";
 
         string strPreviousTitle;
@@ -34,7 +33,12 @@ namespace Task_Tracker
 
         #region Events
 
-        // Specify what you want to happen when the Elapsed event is raised.
+        /// <summary>
+        /// Project File Tracking Logic
+        /// Specify what you want to happen when the Elapsed event is raised.
+        /// </summary>
+        /// <param name="source"></param>
+        /// <param name="e"></param>
         private void OnTimedEvent(object source, ElapsedEventArgs e)
         {
             string strTitle = GetActiveWindowTitle();
@@ -44,6 +48,7 @@ namespace Task_Tracker
             if (!db.connectToDB(connString))
             {
                 stopTimer();
+                return;
             }
             else if (strTitle != null)
             {
@@ -98,7 +103,10 @@ namespace Task_Tracker
 
         #endregion
 
-        // Get active window title.
+        /// <summary>
+        /// Get active window title.
+        /// </summary>
+        /// <returns></returns>
         public string GetActiveWindowTitle()
         {
             const int nChars = 256;
@@ -113,7 +121,9 @@ namespace Task_Tracker
             return null;
         }
 
-        //Start the timer loop
+        /// <summary>
+        /// Start the timer loop
+        /// </summary>
         public void startTimer()
         {
             System.Timers.Timer aTimer = new System.Timers.Timer();
@@ -123,7 +133,9 @@ namespace Task_Tracker
             aTimer.Enabled = true;
         }
 
-        //Stop the timer loop
+        /// <summary>
+        /// Stop the timer loop
+        /// </summary>
         public void stopTimer()
         {
             aTimer.Stop();
