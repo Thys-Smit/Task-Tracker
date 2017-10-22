@@ -75,6 +75,44 @@ namespace Task_Tracker
 
         #region Project File Tracking Logic & Validation
 
+        public string getApplicationTitle(string strTitle)
+        {
+            string strAppName;
+            SqlCommand selectCommand = new SqlCommand
+            (
+                "SELECT ApplicationName FROM Applications WHERE Inactive = 0", conn
+            );
+
+            try
+            {
+                selectCommand.ExecuteNonQuery();
+                SqlDataReader reader = selectCommand.ExecuteReader();
+                while (reader.Read())
+                {
+                    strAppName = reader.GetString(0);
+
+                    if (strTitle.Contains(strAppName))
+                    {
+                        reader.Close();
+                        return strAppName;
+                    }
+                };
+
+                reader.Close();
+            }
+            catch (SqlException ex)
+            {
+                MessageBox.Show(ex.Message);
+                closeDBConn();
+                return null;
+            }
+            finally
+            {
+                //conn.Close();
+            }
+            return null;
+        }
+
         public void insertNewTask(string strTitle, DateTime currentStartTime)
         {
             
@@ -112,11 +150,10 @@ namespace Task_Tracker
                 "SELECT Count(IDApplication) FROM Applications WHERE ApplicationName LIKE @strTitle AND isActive = 1", conn
             );
             //Add Params
-            selectStatement.Parameters.Add(new SqlParameter("strTitle", "%" + strTitle));
+            selectStatement.Parameters.Add(new SqlParameter("strTitle", "%" + strTitle + "%"));
 
             try
             {
-               // if (conn.State != System.Data.ConnectionState.Open) conn.Open();
                 selectStatement.ExecuteNonQuery();
                 SqlDataReader reader = selectStatement.ExecuteReader();
                 reader.Read();

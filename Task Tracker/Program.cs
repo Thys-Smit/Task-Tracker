@@ -18,8 +18,8 @@ namespace Task_Tracker
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             
-            CoreOperations _bo = new CoreOperations();
-            _bo.startTimer();
+            CoreOperations co = new CoreOperations();
+            co.startTimer();
             Application.Run(new frmProjectTracker());
         }
 

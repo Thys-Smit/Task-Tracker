@@ -55,16 +55,8 @@ namespace Task_Tracker
 
                 //TODO :Impliment advanced regex filtering to determine the application name correctly. The current string manipulation caters for a specific scenario.
                 //The idea will be to enable the users to manualy link a regex pattern to a application to enable the program to extract the application name from the window caption.
-                try
-                {
-                    var splitTitle = strTitle.Split('-');
-                    strApplication = splitTitle[1].Trim();
-                }
-                catch
-                {
-                    strApplication = strTitle;
-                }
-
+                strApplication = db.getApplicationTitle(strTitle);
+               
                 //This is the logic to determine the following:
                 //Is it a brand new task - Then insert a new task into the Task table.
                 //Is it a new session of a existing task - Then update the start time and end time.
@@ -72,10 +64,11 @@ namespace Task_Tracker
                 //Note : When a new task is active (be it a brand new task or a new session of a existing task) the previous task's total time should be updated. 
                 if (strPreviousTitle != strTitle)
                 { 
-                    if (db.isValidApplication(strApplication) && !db.isTaskMatch(strTitle))
+                    if (strApplication != null && db.isValidApplication(strApplication) && !db.isTaskMatch(strTitle))
                     {
                         db.insertNewTask(strTitle, DateTime.Now);
-                    }
+                        db.updateExistingTask_EndTime(strTitle, DateTime.Now);
+                    }//TODO : FIX this logic....
                     else if (strPreviousTitle != null && strPreviousApplication != null && db.isValidApplication(strPreviousApplication) && db.isTaskMatch(strPreviousTitle)) 
                     {
                         db.updateExistingTask_EndTime(strPreviousTitle, DateTime.Now);
@@ -83,7 +76,8 @@ namespace Task_Tracker
                     }
                     else if (db.isValidApplication(strApplication) && db.isTaskMatch(strTitle))
                     {
-                        db.updateExistingTask_StartTime(strTitle, DateTime.Now); 
+                        db.updateExistingTask_StartTime(strTitle, DateTime.Now);
+                        db.updateExistingTask_EndTime(strTitle, DateTime.Now);
                     }
                     strPreviousTitle = strTitle;
                     strPreviousApplication = strApplication;
