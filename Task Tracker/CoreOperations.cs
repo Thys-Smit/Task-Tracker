@@ -64,25 +64,30 @@ namespace Task_Tracker
                 //Note : When a new task is active (be it a brand new task or a new session of a existing task) the previous task's total time should be updated. 
                 if (strPreviousTitle != strTitle)
                 { 
-                    if (strApplication != null && db.isValidApplication(strApplication) && !db.isTaskMatch(strTitle))
+                    if (strApplication != null && db.isValidApplication(strApplication) && !db.isTaskMatch(strTitle)) //New Task
                     {
                         db.insertNewTask(strTitle, DateTime.Now);
                         db.updateExistingTask_EndTime(strTitle, DateTime.Now);
-                    }//TODO : FIX this logic....
-                    else if (strPreviousTitle != null && strPreviousApplication != null && db.isValidApplication(strPreviousApplication) && db.isTaskMatch(strPreviousTitle)) 
-                    {
-                        db.updateExistingTask_EndTime(strPreviousTitle, DateTime.Now);
-                        db.updateExistingTask_TotalTime(strPreviousTitle, DateTime.Now);                       
                     }
-                    else if (db.isValidApplication(strApplication) && db.isTaskMatch(strTitle))
+                    else  
                     {
-                        db.updateExistingTask_StartTime(strTitle, DateTime.Now);
-                        db.updateExistingTask_EndTime(strTitle, DateTime.Now);
+                        if (strPreviousTitle != null && strPreviousApplication != null && db.isValidApplication(strPreviousApplication) && db.isTaskMatch(strPreviousTitle)) //Update previous task total time
+                        {
+                            db.updateExistingTask_EndTime(strPreviousTitle, DateTime.Now);
+                            db.updateExistingTask_TotalTime(strPreviousTitle, DateTime.Now);
+                        }
+
+                        if (db.isValidApplication(strApplication) && db.isTaskMatch(strTitle))
+                        {
+                            db.updateExistingTask_StartTime(strTitle, DateTime.Now);
+                            db.updateExistingTask_EndTime(strTitle, DateTime.Now);
+                        }
                     }
+                    
                     strPreviousTitle = strTitle;
                     strPreviousApplication = strApplication;
                 }
-                else if (db.isValidApplication(strApplication) && db.isTaskMatch(strTitle))
+                else if (db.isValidApplication(strApplication) && db.isTaskMatch(strTitle)) //Same task as a second ago
                 {
                     db.updateExistingTask_EndTime(strTitle, DateTime.Now);
                     strPreviousTitle = strTitle;
