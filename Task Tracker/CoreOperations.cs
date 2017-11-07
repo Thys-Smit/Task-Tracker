@@ -29,6 +29,7 @@ namespace Task_Tracker
 
         string strPreviousTitle;
         string strPreviousApplication;
+        bool stopTimer = false;
         #endregion
 
         #region Events
@@ -47,7 +48,7 @@ namespace Task_Tracker
             //Open the DB Connection
             if (!db.connectToDB(connString))
             {
-                stopTimer();
+                stopTimerMethod();
                 return;
             }
             else if (strTitle != null)
@@ -95,7 +96,7 @@ namespace Task_Tracker
 
                 //Close the DB Connection and restart the timer.
                 db.closeDBConn();
-                startTimer();
+                if (stopTimer == false) startTimerMethod();
             }
 
         }
@@ -123,11 +124,11 @@ namespace Task_Tracker
         /// <summary>
         /// Start the timer loop
         /// </summary>
-        public void startTimer()
+        public void startTimerMethod(int iInterval = 1000)
         {
             System.Timers.Timer aTimer = new System.Timers.Timer();
             aTimer.Elapsed += new ElapsedEventHandler(OnTimedEvent);
-            aTimer.Interval = 1000;
+            aTimer.Interval = iInterval;
             aTimer.AutoReset = false;
             aTimer.Enabled = true;
         }
@@ -135,9 +136,18 @@ namespace Task_Tracker
         /// <summary>
         /// Stop the timer loop
         /// </summary>
-        public void stopTimer()
+        public void stopTimerMethod()
         {
-            aTimer.Stop();
+            stopTimer = true;
+        }
+
+        /// <summary>
+        /// TODO
+        /// </summary>
+        /// <param name="iInterval"></param>
+        public void setTimerInterval(int iInterval)
+        {
+            
         }
 
     }
